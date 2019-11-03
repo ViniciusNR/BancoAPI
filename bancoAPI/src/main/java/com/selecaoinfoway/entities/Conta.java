@@ -1,14 +1,16 @@
 package com.selecaoinfoway.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.selecaoinfoway.enums.TipoConta;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Conta extends Base{
 	private String numero;
 	private double saldo;
 	private TipoConta tipo;
 	
-	private Cliente titular;
 	private Agencia agencia;
+	
 	public String getNumero() {
 		return numero;
 	}
@@ -27,11 +29,8 @@ public class Conta extends Base{
 	public void setTipo(TipoConta tipo) {
 		this.tipo = tipo;
 	}
-	public Cliente getTitular() {
-		return titular;
-	}
-	public void setTitular(Cliente titular) {
-		this.titular = titular;
+	public void setTipo(String tipo) {
+		this.tipo = TipoConta.valueOf(tipo);
 	}
 	public Agencia getAgencia() {
 		return agencia;

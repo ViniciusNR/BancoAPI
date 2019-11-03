@@ -1,5 +1,8 @@
 package com.selecaoinfoway.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Agencia extends Base{
 	private String nome; 
 	private String numero;
@@ -29,6 +32,4 @@ public class Agencia extends Base{
 	public void setBanco(Banco banco) {
 		this.banco = banco;
 	}
-	
-	
 }
