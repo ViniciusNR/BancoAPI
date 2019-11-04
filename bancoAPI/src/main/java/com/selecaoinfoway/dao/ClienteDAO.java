@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.selecaoinfoway.entities.Agencia;
 import com.selecaoinfoway.entities.Banco;
 import com.selecaoinfoway.entities.Cliente;
+import com.selecaoinfoway.entities.ClienteTransacao;
 import com.selecaoinfoway.entities.Conta;
 import com.selecaoinfoway.util.Util;
 
@@ -93,6 +94,68 @@ public class ClienteDAO extends BaseDAO {
 		} finally {
 			super.fecharConexao();
 		}
+	}
+	
+	public Cliente recuperar(Cliente vo) throws SQLException {
+		try {
+			StringBuffer sql = new StringBuffer(SELECT);
+			
+			if(vo != null && vo.getId() != 0) {
+				Util.incluirClausulaNoWhere_AND(sql, " Clientes.id = ? ");				
+			}
+
+			super.prepararDAO(sql);
+			
+			int indice = 1;
+			
+			if(vo != null && vo.getId() != 0) {
+				st.setInt(indice++, vo.getId());
+			}
+			
+			ResultSet rs = super.listar();
+			
+			Cliente cliente = null;
+			
+			if(rs.next()) {
+				cliente = new Cliente();
+				cliente.setId(rs.getInt("Clientes.id"));
+				cliente.setNome(rs.getString("Clientes.nome"));
+				cliente.setTelefone(rs.getString("Clientes.telefone"));
+				
+				cliente.setConta(new Conta());
+				cliente.getConta().setId(rs.getInt("Contas.id"));
+				cliente.getConta().setNumero(rs.getString("Contas.numero"));
+				cliente.getConta().setTipo(rs.getString("Contas.tipo"));
+				cliente.getConta().setSaldo(rs.getDouble("Contas.saldo"));
+				cliente.getConta().setAgencia(new Agencia());
+				
+				cliente.getConta().getAgencia().setId(rs.getInt("Agencias.id"));
+				cliente.getConta().getAgencia().setNome(rs.getString("Agencias.nome"));
+				cliente.getConta().getAgencia().setNumero(rs.getString("Agencias.numero"));
+				
+				cliente.getConta().getAgencia().setBanco(new Banco());
+				cliente.getConta().getAgencia().getBanco().setId(rs.getInt("Bancos.id"));
+				cliente.getConta().getAgencia().getBanco().setNome(rs.getString("Bancos.nome"));
+				cliente.getConta().getAgencia().getBanco().setSigla(rs.getString("Bancos.sigla"));
+			}
+			
+			rs.close();
+			rs = null;
+			
+			return cliente;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public ClienteTransacao recuperarClienteTransacoes(Cliente vo) throws SQLException {
+		TransacaoDAO transacaoDAO = new TransacaoDAO();
+		ClienteTransacao clienteTransacao = new ClienteTransacao();
+		
+		clienteTransacao.setCliente(recuperar(vo));
+		clienteTransacao.setTransacoes(transacaoDAO.listar(clienteTransacao.getCliente()));
+		
+		return clienteTransacao;
 	}
 	
 	public ArrayList<Object> listar(Cliente vo) throws SQLException {

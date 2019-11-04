@@ -27,4 +27,11 @@ public class ClienteController {
 		
 		return clienteFachada.listar(cliente);
 	}
+	
+	@PostMapping("/transacoes")
+	public Resultado transacoes(@RequestBody Cliente cliente) {
+		ClienteFachada clienteFachada = new ClienteFachada();
+		
+		return clienteFachada.transacoes(cliente);
+	}
 }

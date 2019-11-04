@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.selecaoinfoway.dao.ClienteDAO;
 import com.selecaoinfoway.entities.Cliente;
+import com.selecaoinfoway.entities.ClienteTransacao;
 import com.selecaoinfoway.entities.Resultado;
 import com.selecaoinfoway.entities.ResultadoLista;
 import com.selecaoinfoway.enums.StatusResultado;
@@ -43,6 +44,26 @@ public class ClienteFachada {
 			resultado.setItens(new ArrayList<Object>());
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao listar Clientes!");
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado transacoes(Cliente cliente) {
+		Resultado resultado = new Resultado();
+		ClienteDAO clienteDAO = new ClienteDAO();
+		ClienteTransacao clienteTransacao = new ClienteTransacao();
+		try {
+			clienteTransacao = clienteDAO.recuperarClienteTransacoes(cliente);
+			
+			resultado.setItem(clienteTransacao);
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Extrato bancário retornado com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Object());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao retornar extrato bancário!");
 			e.printStackTrace();
 		}
 		

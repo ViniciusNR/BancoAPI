@@ -6,7 +6,7 @@ import com.selecaoinfoway.enums.TipoConta;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Conta extends Base{
 	private String numero;
-	private double saldo;
+	private Double saldo;
 	private TipoConta tipo;
 	
 	private Agencia agencia;
@@ -17,10 +17,10 @@ public class Conta extends Base{
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
-	public double getSaldo() {
+	public Double getSaldo() {
 		return saldo;
 	}
-	public void setSaldo(double saldo) {
+	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
 	}
 	public TipoConta getTipo() {
