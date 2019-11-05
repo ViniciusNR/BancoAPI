@@ -13,6 +13,18 @@ public class ClienteFachada {
 	
 	public Resultado gravar(Cliente cliente) {
 		Resultado resultado = new Resultado();
+
+		if(cliente.getId() == 0) {
+			resultado = inserir(cliente);
+		} else {
+			resultado = atualizar(cliente);
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado inserir(Cliente cliente) {
+		Resultado resultado = new Resultado();
 		ClienteDAO clienteDAO = new ClienteDAO();
 		try {
 			cliente = clienteDAO.inserir(cliente);
@@ -25,6 +37,24 @@ public class ClienteFachada {
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao inserir Cliente!");
 			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado atualizar(Cliente cliente) {
+		Resultado resultado = new Resultado();
+		ClienteDAO clieteDAO = new ClienteDAO();
+		try {
+			clieteDAO.atualizar(cliente);
+			
+			resultado.setItem(cliente);
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Cliente atualizado com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Cliente());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao atualizar Cliente!");
 		}
 		
 		return resultado;
@@ -45,6 +75,27 @@ public class ClienteFachada {
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao listar Clientes!");
 			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado remover(int id) {
+		Resultado resultado = new Resultado();
+		ClienteDAO clienteDAO = new ClienteDAO();
+		try {
+			if(clienteDAO.remover(id) != 1) {
+				resultado.setStatus(StatusResultado.FALHA);
+				resultado.setMensagem("Cliente não encontrado!");
+				return resultado;
+			}
+			
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Cliente removido com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Cliente());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao remover Cliente!");
 		}
 		
 		return resultado;

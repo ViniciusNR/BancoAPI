@@ -21,7 +21,6 @@ public class FabricaDAO {
 	}
 
 	public static Connection criarConexao() throws SQLException {
-		setarParametrosConexao("jdbc:mysql://127.0.0.1:3306/selecaoinfoway_db?characterEncoding=utf-8","root","root");
 		return criarConexaoSimples();
 	}
 

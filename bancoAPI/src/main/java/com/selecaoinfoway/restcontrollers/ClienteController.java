@@ -1,5 +1,7 @@
 package com.selecaoinfoway.restcontrollers;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,13 @@ public class ClienteController {
 		ClienteFachada clienteFachada = new ClienteFachada();
 		
 		return clienteFachada.listar(cliente);
+	}
+	
+	@DeleteMapping("/remover/{id}")
+	public Resultado remover(@PathVariable Integer id) {
+		ClienteFachada clienteFachada = new ClienteFachada();
+		
+		return clienteFachada.remover(id);
 	}
 	
 	@PostMapping("/transacoes")

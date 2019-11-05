@@ -14,8 +14,6 @@ import com.selecaoinfoway.util.Util;
 public class ClienteDAO extends BaseDAO {
 	
 	private static final String TABLE = " Clientes ";
-	private static final String INSERT = " INSERT INTO " + TABLE + " (nome, cpf, telefone, idAgencia) VALUES (? , ? , ? , ?)";
-	private static final String INSERT_CONTA = " INSERT INTO Contas (numero, tipo, idCliente, idAgencia) VALUES (? , ? , ? , ?)";
 	private static final String SELECT = " SELECT "
 			+ " Clientes.id, "
 			+ " Clientes.nome, "
@@ -34,7 +32,13 @@ public class ClienteDAO extends BaseDAO {
 			+ " FROM " + TABLE 
 			+ " JOIN Contas ON Contas.idCliente = Clientes.id "
 			+ " JOIN Agencias ON Agencias.id = Contas.idAgencia "
-			+ " JOIN Bancos ON Bancos.id = Agencias.idBanco ";
+			+ " JOIN Bancos ON Bancos.id = Agencias.idBanco "
+			+ " WHERE Clientes.inativo = 0 ";
+	private static final String INSERT = " INSERT INTO " + TABLE + " (nome, cpf, telefone, idAgencia) VALUES (? , ? , ? , ?)";
+	private static final String INSERT_CONTA = " INSERT INTO Contas (numero, tipo, idCliente, idAgencia) VALUES (? , ? , ? , ?)";
+	private static final String UPDATE = " UPDATE " + TABLE + " SET nome = ?, cpf = ?, telefone = ? WHERE id = ? ";
+	private static final String UPDATE_CONTA = " UPDATE Contas SET numero = ?, tipo = ? WHERE id = ? ";
+	private static final String DELETE = " UPDATE " + TABLE + " SET inativo = 1 WHERE id = ? ";
 	
 	public Cliente inserir(Cliente vo) throws Exception {
 		try {
@@ -91,6 +95,73 @@ public class ClienteDAO extends BaseDAO {
 			vo.getConta().setId(id);
 			
 			return vo;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public void atualizar(Cliente vo) throws Exception {
+		try {
+			super.iniciarTransacao();
+			
+			atualizarCliente(vo);
+			atualizarConta(vo);
+			
+			super.finalizarTransacao();
+			
+		} catch (Exception e) {
+			super.desfazerTransacao();
+			throw e;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public void atualizarCliente(Cliente vo) throws SQLException {
+		try {
+			super.prepararDAO(UPDATE);
+			
+			int indice = 1;
+			st.setString(indice++, vo.getNome());
+			st.setString(indice++, vo.getCpf());
+			st.setString(indice++, vo.getTelefone());
+			
+			st.setInt(indice++, vo.getId());
+			
+			super.atualizar();
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public Cliente atualizarConta(Cliente vo) throws SQLException {
+		int id;
+		try {
+			super.prepararDAO(UPDATE_CONTA);
+			
+			int indice = 1;
+			st.setString(indice++, vo.getConta().getNumero());
+			st.setString(indice++, vo.getConta().getTipo().toString());
+			
+			st.setInt(indice++, vo.getId());
+			
+			id = super.atualizarERetornarID();
+			vo.getConta().setId(id);
+			
+			return vo;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public int remover(int id) throws SQLException {
+		try {
+			super.prepararDAO(DELETE);
+			
+			int indice = 1;
+			st.setInt(indice++, id);
+			
+			return super.atualizar();
 		} finally {
 			super.fecharConexao();
 		}

@@ -12,6 +12,18 @@ public class AgenciaFachada {
 	
 	public Resultado gravar(Agencia agencia) {
 		Resultado resultado = new Resultado();
+
+		if(agencia.getId() == 0) {
+			resultado = inserir(agencia);
+		} else {
+			resultado = atualizar(agencia);
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado inserir(Agencia agencia) {
+		Resultado resultado = new Resultado();
 		AgenciaDAO agenciaDAO = new AgenciaDAO();
 		try {
 			agencia = agenciaDAO.inserir(agencia);
@@ -23,6 +35,24 @@ public class AgenciaFachada {
 			resultado.setItem(new Agencia());
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao inserir Agencia!");
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado atualizar(Agencia agencia) {
+		Resultado resultado = new Resultado();
+		AgenciaDAO agenciaDAO = new AgenciaDAO();
+		try {
+			agenciaDAO.atualizar(agencia);
+			
+			resultado.setItem(agencia);
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Agencia atualizada com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Agencia());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao atualizar Agencia!");
 		}
 		
 		return resultado;
@@ -42,6 +72,27 @@ public class AgenciaFachada {
 			resultado.setItens(new ArrayList<Object>());
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao listar Agencias!");
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado remover(int id) {
+		Resultado resultado = new Resultado();
+		AgenciaDAO agenciaDAO = new AgenciaDAO();
+		try {
+			if(agenciaDAO.remover(id) != 1) {
+				resultado.setStatus(StatusResultado.FALHA);
+				resultado.setMensagem("Agencia não encontrada!");
+				return resultado;
+			}
+			
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Agencia removida com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Agencia());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao remover Agencia!");
 		}
 		
 		return resultado;

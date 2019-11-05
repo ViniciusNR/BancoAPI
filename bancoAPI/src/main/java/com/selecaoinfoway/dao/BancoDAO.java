@@ -10,8 +10,10 @@ import com.selecaoinfoway.util.Util;
 public class BancoDAO extends BaseDAO {
 	
 	private static final String TABLE = " Bancos ";
-	private static final String INSERT = " INSERT INTO " + TABLE + " (nome, sigla) VALUES (? , ? )";
-	private static final String SELECT = " SELECT * FROM " + TABLE;
+	private static final String SELECT = " SELECT * FROM " + TABLE + " WHERE inativo = 0 ";
+	private static final String INSERT = " INSERT INTO " + TABLE + " (nome, sigla) VALUES (? , ? ) ";
+	private static final String UPDATE = " UPDATE " + TABLE + " SET nome = ?, sigla = ? WHERE id = ? ";
+	private static final String DELETE = " UPDATE " + TABLE + " SET inativo = 1 WHERE id = ? ";
 	
 	public Banco inserir(Banco vo) throws SQLException {
 		int id;
@@ -26,6 +28,22 @@ public class BancoDAO extends BaseDAO {
 			vo.setId(id);
 			
 			return vo;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public void atualizar(Banco vo) throws SQLException {
+		try {
+			super.prepararDAO(UPDATE);
+			
+			int indice = 1;
+			st.setString(indice++, vo.getNome());
+			st.setString(indice++, vo.getSigla());
+			
+			st.setInt(indice++, vo.getId());
+			
+			super.atualizar();
 		} finally {
 			super.fecharConexao();
 		}
@@ -65,6 +83,19 @@ public class BancoDAO extends BaseDAO {
 			rs = null;
 			
 			return bancos;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
+	public int remover(int id) throws SQLException {
+		try {
+			super.prepararDAO(DELETE);
+			
+			int indice = 1;
+			st.setInt(indice++, id);
+			
+			return super.atualizar();
 		} finally {
 			super.fecharConexao();
 		}
