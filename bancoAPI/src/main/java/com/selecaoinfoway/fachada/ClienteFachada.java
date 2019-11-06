@@ -60,6 +60,25 @@ public class ClienteFachada {
 		return resultado;
 	}
 	
+	public Resultado recuperar(Cliente cliente) {
+		Resultado resultado = new Resultado();
+		ClienteDAO clienteDAO = new ClienteDAO();
+		try {
+			cliente = clienteDAO.recuperar(cliente);
+			
+			resultado.setItem(cliente);
+			resultado.setStatus(StatusResultado.SUCESSO);
+			resultado.setMensagem("Clientes recuperado com sucesso!");
+		} catch (Exception e) {
+			resultado.setItem(new Cliente());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao recuperar Clientes!");
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
 	public ResultadoLista listar(Cliente cliente) {
 		ResultadoLista resultado = new ResultadoLista();
 		ClienteDAO clienteDAO = new ClienteDAO();

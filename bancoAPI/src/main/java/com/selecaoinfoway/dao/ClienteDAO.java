@@ -174,6 +174,9 @@ public class ClienteDAO extends BaseDAO {
 			if(vo != null && vo.getId() != 0) {
 				Util.incluirClausulaNoWhere_AND(sql, " Clientes.id = ? ");				
 			}
+			if(vo != null && vo.getNome() != null && !vo.getNome().isEmpty()) {
+				Util.incluirClausulaNoWhere_AND(sql, " Clientes.nome = ? ");				
+			}
 
 			super.prepararDAO(sql);
 			
@@ -181,6 +184,9 @@ public class ClienteDAO extends BaseDAO {
 			
 			if(vo != null && vo.getId() != 0) {
 				st.setInt(indice++, vo.getId());
+			}
+			if(vo != null && vo.getNome() != null && !vo.getNome().isEmpty()) {
+				st.setString(indice++, vo.getNome());				
 			}
 			
 			ResultSet rs = super.listar();

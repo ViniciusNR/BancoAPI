@@ -10,6 +10,18 @@ public class Cliente extends Base{
 	
 	private Conta conta;
 	
+	public Cliente() {
+		super();
+	}
+
+	public Cliente(int id) {
+		super(id);
+	}
+
+	public Cliente(String nome) {
+		this.nome = nome;
+	}
+
 	public String getNome() {
 		return nome;
 	}
