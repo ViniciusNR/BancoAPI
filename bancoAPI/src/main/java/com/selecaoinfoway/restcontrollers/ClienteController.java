@@ -1,10 +1,10 @@
 package com.selecaoinfoway.restcontrollers;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.selecaoinfoway.entities.Cliente;
@@ -13,33 +13,42 @@ import com.selecaoinfoway.entities.ResultadoLista;
 import com.selecaoinfoway.fachada.ClienteFachada;
 
 @RestController
-@RequestMapping("/cliente")
 public class ClienteController {
 
-	@PostMapping("/gravar")
+	@PostMapping("/clientes")
 	public Resultado gravarCliente(@RequestBody Cliente cliente) {
 		ClienteFachada clienteFachada = new ClienteFachada();
 		
 		return clienteFachada.gravar(cliente);
 	}
 	
-	@PostMapping("/listar")
-	public ResultadoLista listar(@RequestBody Cliente cliente) {
+	@GetMapping("/clientes")
+	public ResultadoLista listar() {
 		ClienteFachada clienteFachada = new ClienteFachada();
+		Cliente cliente = new Cliente();
 		
 		return clienteFachada.listar(cliente);
 	}
 	
-	@DeleteMapping("/remover/{id}")
+	@GetMapping("/clientes/{id}")
+	public Resultado recuperar(@PathVariable Integer id) {
+		ClienteFachada clienteFachada = new ClienteFachada();
+		
+		Cliente cliente = new Cliente(id);
+		return clienteFachada.recuperar(cliente);
+	}
+	
+	@DeleteMapping("/clientes/{id}")
 	public Resultado remover(@PathVariable Integer id) {
 		ClienteFachada clienteFachada = new ClienteFachada();
 		
 		return clienteFachada.remover(id);
 	}
 	
-	@PostMapping("/transacoes")
-	public Resultado transacoes(@RequestBody Cliente cliente) {
+	@GetMapping("/clientes/{id}/transacoes")
+	public Resultado transacoes(@PathVariable Integer id) {
 		ClienteFachada clienteFachada = new ClienteFachada();
+		Cliente cliente = new Cliente(id);
 		
 		return clienteFachada.transacoes(cliente);
 	}

@@ -66,13 +66,19 @@ public class ClienteFachada {
 		try {
 			cliente = clienteDAO.recuperar(cliente);
 			
-			resultado.setItem(cliente);
-			resultado.setStatus(StatusResultado.SUCESSO);
-			resultado.setMensagem("Clientes recuperado com sucesso!");
+			if(cliente != null) {
+				resultado.setItem(cliente);
+				resultado.setStatus(StatusResultado.SUCESSO);
+				resultado.setMensagem("Cliente recuperado com sucesso!");
+			} else {
+				resultado.setItem(cliente);
+				resultado.setStatus(StatusResultado.FALHA);
+				resultado.setMensagem("Cliente não encontrado!");
+			}
 		} catch (Exception e) {
 			resultado.setItem(new Cliente());
 			resultado.setStatus(StatusResultado.FALHA);
-			resultado.setMensagem("Falha ao recuperar Clientes!");
+			resultado.setMensagem("Falha ao recuperar Cliente!");
 			e.printStackTrace();
 		}
 		

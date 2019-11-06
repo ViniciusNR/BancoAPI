@@ -49,6 +49,42 @@ public class BancoDAO extends BaseDAO {
 		}
 	}
 	
+	public Banco recuperar(Banco vo) throws SQLException {
+		try {
+			StringBuffer sql = new StringBuffer(SELECT);
+			
+			if(vo != null && vo.getId() != 0) {
+				Util.incluirClausulaNoWhere_AND(sql, " Bancos.id = ? ");				
+			}
+
+			super.prepararDAO(sql);
+			
+			int indice = 1;
+			
+			if(vo != null && vo.getId() != 0) {
+				st.setInt(indice++, vo.getId());
+			}
+			
+			ResultSet rs = super.listar();
+			
+			Banco banco = null;
+			
+			if(rs.next()) {
+				banco = new Banco();
+				banco.setId(rs.getInt("Bancos.id"));
+				banco.setNome(rs.getString("Bancos.nome"));
+				banco.setSigla(rs.getString("Bancos.sigla"));
+			}
+			
+			rs.close();
+			rs = null;
+			
+			return banco;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
 	public ArrayList<Object> listar(Banco vo) throws SQLException {
 		try {
 			StringBuffer sql = new StringBuffer(SELECT);

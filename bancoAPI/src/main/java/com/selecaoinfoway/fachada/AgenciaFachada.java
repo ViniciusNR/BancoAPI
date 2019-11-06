@@ -58,6 +58,29 @@ public class AgenciaFachada {
 		return resultado;
 	}
 	
+	public Resultado recuperar(Agencia agencia) {
+		Resultado resultado = new Resultado();
+		AgenciaDAO agenciaDAO = new AgenciaDAO();
+		try {
+			agencia = agenciaDAO.recuperar(agencia);
+			
+			if(agencia != null) {
+				resultado.setItem(agencia);
+				resultado.setStatus(StatusResultado.SUCESSO);
+				resultado.setMensagem("Agencia recuperada com sucesso!");
+			} else {
+				resultado.setItem(agencia);
+				resultado.setStatus(StatusResultado.FALHA);
+				resultado.setMensagem("Agencia não encontrada!");
+			}
+		} catch (Exception e) {
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao recuperar Agencia!");
+		}
+		
+		return resultado;
+	}
+	
 	public ResultadoLista listar(Agencia agencia) {
 		ResultadoLista resultado = new ResultadoLista();
 		AgenciaDAO agenciaDAO = new AgenciaDAO();

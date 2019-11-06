@@ -50,6 +50,42 @@ public class AgenciaDAO extends BaseDAO {
 		}
 	}
 	
+	public Agencia recuperar(Agencia vo) throws SQLException {
+		try {
+			StringBuffer sql = new StringBuffer(SELECT);
+
+			if(vo != null && vo.getId() != 0) {
+				Util.incluirClausulaNoWhere_AND(sql, " id = ? ");
+			}
+			
+			super.prepararDAO(sql);
+			
+			int indice = 1;
+			
+			if(vo != null && vo.getId() != 0) {
+				st.setInt(indice++, vo.getId());
+			}
+			
+			ResultSet rs = super.listar();
+			
+			Agencia agencia = null;
+			
+			if(rs.next()) {
+				agencia = new Agencia();
+				agencia.setId(rs.getInt("id"));
+				agencia.setNome(rs.getString("nome"));
+				agencia.setNumero(rs.getString("numero"));
+			}
+			
+			rs.close();
+			rs = null;
+			
+			return agencia;
+		} finally {
+			super.fecharConexao();
+		}
+	}
+	
 	public ArrayList<Object> listar(Agencia vo) throws SQLException {
 		try {
 			StringBuffer sql = new StringBuffer(SELECT);

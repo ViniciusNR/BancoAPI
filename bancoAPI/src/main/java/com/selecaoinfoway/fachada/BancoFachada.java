@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.selecaoinfoway.dao.BancoDAO;
 import com.selecaoinfoway.entities.Banco;
+import com.selecaoinfoway.entities.Cliente;
 import com.selecaoinfoway.entities.Resultado;
 import com.selecaoinfoway.entities.ResultadoLista;
 import com.selecaoinfoway.enums.StatusResultado;
@@ -53,6 +54,31 @@ public class BancoFachada {
 			resultado.setItem(new Banco());
 			resultado.setStatus(StatusResultado.FALHA);
 			resultado.setMensagem("Falha ao atualizar Banco!");
+		}
+		
+		return resultado;
+	}
+	
+	public Resultado recuperar(Banco banco) {
+		Resultado resultado = new Resultado();
+		BancoDAO bancoDAO = new BancoDAO();
+		try {
+			banco = bancoDAO.recuperar(banco);
+			
+			if(banco != null) {
+				resultado.setItem(banco);
+				resultado.setStatus(StatusResultado.SUCESSO);
+				resultado.setMensagem("Banco recuperado com sucesso!");
+			} else {
+				resultado.setItem(banco);
+				resultado.setStatus(StatusResultado.FALHA);
+				resultado.setMensagem("Banco não encontrado!");
+			}
+		} catch (Exception e) {
+			resultado.setItem(new Cliente());
+			resultado.setStatus(StatusResultado.FALHA);
+			resultado.setMensagem("Falha ao recuperar Banco!");
+			e.printStackTrace();
 		}
 		
 		return resultado;
